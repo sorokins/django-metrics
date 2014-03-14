@@ -1,0 +1,96 @@
+=====
+Django-metrics
+=====
+
+Application helps to track everything with Google Analytics, Google Adwords, Yandex.Metrika, Mixpanel
+
+Installation
+----
+
+1. Add 'metrics' to INSTALLED_APPS in settings.py
+
+2. Add this counter settings to settings.py:
+
+    METRICS = {
+        'ga': {
+            'id': ''  # prod: UA-23534904-1
+        },
+        'google_conversion': {
+            'id': 997902847,
+            'demo': {
+                'google_conversion_language': 'en',
+                'google_conversion_color': 'ffffff',
+                'google_conversion_label': 'OKfPCKnOkggQ_5Pr2wM',
+                'google_conversion_value': 25,
+                'google_remarketing_only': False
+            },
+            'application': {
+                'google_conversion_language': 'en',
+                'google_conversion_color': 'ffffff',
+                'google_conversion_label': 'EzGBCOn-mggQ_5Pr2wM',
+                'google_conversion_value': 25,
+                'google_remarketing_only': False
+            },
+            'email_confirmation': {
+                'google_conversion_language': 'en',
+                'google_conversion_color': 'ffffff',
+                'google_conversion_label': 'n3-9CPHUkggQ_5Pr2wM',
+                'google_conversion_value': 75,
+                'google_remarketing_only': False
+            },
+            'docs_uploaded': {
+                'google_conversion_language': 'en',
+                'google_conversion_color': 'ffffff',
+                'google_conversion_label': 'LzRICPnTkggQ_5Pr2wM',
+                'google_conversion_value': 150,
+                'google_remarketing_only': False
+            },
+            'application_approved': {
+                'google_conversion_language': 'en',
+                'google_conversion_color': 'ffffff',
+                'google_conversion_label': 'Ig8fCInSkggQ_5Pr2wM',
+                'google_conversion_value': 750,
+                'google_remarketing_only': False
+            },
+            'deposit': {
+                'google_conversion_language': 'en',
+                'google_conversion_color': 'ffffff',
+                'google_conversion_label': 'hu49COnVkggQ_5Pr2wM',
+                'google_conversion_value': 1500,
+                'google_remarketing_only': False
+            },
+        },
+
+        'metrika': {
+            'id': 24209977
+        },
+        'mixpanel': {
+            'id': '972adc8176ff3ebcaba9130196c784ba'  # prod: 6f911e9255b01052dfe29f53297f45e9
+        }
+    }
+
+    METRICS_EXCLUDE_USER_DOMAIN = 'example.com'
+
+
+3. Insert js-script into page:
+
+    {% load metrics %}
+    {% metrics_js %}
+
+4. Insert js-codes for counters:
+    {% load metrics %}
+    {% metrika_counter %}
+    {% mixpanel_counter %}
+    {% ga_counter %}
+
+
+How to use
+------
+1. Track events in js (will be send to Mixpanel, GA, Yandex.Metrika):
+    Metrics.track_event(category, action, user, value, data)
+
+    For example:
+    Metrics.track_event('acquisition', 'Application finished', 'email@example.com', 50, {demo: true});
+
+
+

@@ -1,0 +1,77 @@
+<script type="text/javascript">
+    var Metrics = {
+        mixpanel_people_set: function(name_or_object, value) {
+            /**
+             * name_or_object - name (string) or object {key: value} for bulk people set
+             */
+            var distinct_id;
+            if (mixpanel.get_distinct_id !== undefined) {
+                distinct_id = mixpanel.get_distinct_id();
+            }
+            {% if not DEBUG %}
+                if (distinct_id && distinct_id.indexOf('@{{ METRICS_EXCLUDE_USER_DOMAIN }}') != -1) {
+                    // do not track
+                    return;
+                }
+            {% endif %}
+
+            if (typeof name_or_object == 'object') {
+                // bulk object set
+                mixpanel.people.set(name_or_object);
+            } else {
+                mixpanel.people.set(name_or_object, value);
+            }
+
+            // otherwise javascript stops with error if mixpanel CDN is down
+            if (distinct_id) {
+                mixpanel.identify(distinct_id);
+            }
+        },
+        track_event: function(category, action, user, value, data) {
+            /**
+             * Track event in GA, Mixpanel, Y.Metrika
+             * action should be ID without spaces (otherwise Metrika will not track it)
+             */
+
+            if (!user && mixpanel.get_distinct_id !== undefined) {
+                user = mixpanel.get_distinct_id();
+            }
+
+            {% if not DEBUG %}
+                if (user && user.indexOf('@{{ METRICS_EXCLUDE_USER_DOMAIN }}') != -1) {
+                    // do not track
+                    return;
+                }
+            {% endif %}
+
+
+            if (typeof ga !== 'undefined') {
+
+                var label = user;
+                if (label.indexOf('@') != -1) { // email, not uid
+                    ga('send', 'event', category, action, label, value);
+                } else {
+                    ga('send', 'event', category, action);
+                }
+
+            }
+
+            if (typeof yaCounter{{ metrika_id }} !== 'undefined') {
+                yaCounter{{ metrika_id }}.reachGoal(action, {
+                    value: value
+                })
+            }
+
+            if (typeof mixpanel !== 'undefined') {
+
+                if (typeof data === 'undefined') {
+                    data = {};
+                }
+                mixpanel.track(action, data);
+            }
+        },
+
+        adwords_conversion()
+    };
+
+</script>
