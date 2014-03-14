@@ -63,7 +63,7 @@ def mixpanel_track_charge(distinct_id, amount):
 
 
 @task(name="ga.track_event")
-def ga_track(event_category, event_action, distinct_id=None, event_label='', event_value=''):
+def ga_track(event_category, event_action, distinct_id=None, event_label='', event_value='', utm=None):
     if not distinct_id:
         distinct_id = uuid.uuid4()
 
@@ -74,8 +74,18 @@ def ga_track(event_category, event_action, distinct_id=None, event_label='', eve
         't': 'event',
         'ec': event_category,
         'ea': event_action,
-
     }
+    if utm:
+        data.update({
+            "dr": utm.get("referrer"),
+            "cs": utm.get("source"),
+            "cn": utm.get("campaign"),
+            "cm": utm.get("medium"),
+            "gclid": utm.get("gclid"),
+            "dclid": utm.get("dclid"),
+        })
+
+
     if event_label:
         data.update({
             'el': event_label
@@ -90,6 +100,6 @@ def ga_track(event_category, event_action, distinct_id=None, event_label='', eve
 
 
 @task(name='metrics.track_event')
-def track_event(event_category, event_action, distinct_id=None, event_label='', event_value='', properties={}):
-    ga_track.delay(event_category, event_action, distinct_id, event_label, event_value)
+def track_event(event_category, event_action, distinct_id=None, event_label='', event_value='', properties={}, utm=None):
+    ga_track.delay(event_category, event_action, distinct_id, event_label, event_value, utm=utm)
     mixpanel_track.delay(distinct_id, event_action, properties)
