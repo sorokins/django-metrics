@@ -71,7 +71,29 @@
             }
         },
 
-        adwords_conversion()
+        adwords_conversion: function(name){
+            /**
+             * name - from METRICS['adwords_conversion'] variable
+             */
+            var conversions = {{ adwords_conversions|safe }};
+            var google_conversion_id = conversions.id;
+
+            for (var key in conversions) {
+                if (key == name) {
+                    for (var var_name in conversions[key]) {
+                        window[var_name] = conversions[key][var_name];
+                    }
+                    var oHead = document.getElementsByTagName('HEAD').item(0);
+                    var oScript= document.createElement("script");
+                    oScript.type = "text/javascript";
+                    oScript.src="//www.googleadservices.com/pagead/conversion.js";
+                    oHead.appendChild( oScript);
+
+                    break;
+                }
+            }
+
+        }
     };
 
 </script>

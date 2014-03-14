@@ -1,3 +1,4 @@
+import json
 from django import template
 from django.conf import settings
 
@@ -10,6 +11,7 @@ def metrics_js():
         'DEBUG': settings.DEBUG,
         'metrika_id': settings.METRICS['metrika']['id'],
         'METRICS_EXCLUDE_USER_DOMAIN': settings.METRICS_EXCLUDE_USER_DOMAIN,
+        'adwords_conversions': json.dumps(settings.METRICS['adwords_conversion'])
     }
 
 
@@ -30,9 +32,4 @@ def ga_counter():
     return {
         'id': settings.METRICS['ga']['id']
     }
-
-
-@register.inclusion_tag('')
-def google_conversion():
-    pass
 
