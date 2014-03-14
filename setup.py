@@ -15,7 +15,7 @@ setup(
     description='',
     long_description=README,
     url='',
-    author='Sergey Sorokin',
+    author='Sergey Sorokin, Denis Voskvitsov',
     author_email='40inss@gmail.com',
     install_requires = ['mixpanel-py>=2.0.1,<=2.99', 'celery>=3.1.9,<=3.99'],
     classifiers=[
