@@ -13,10 +13,10 @@ Installation
 
     METRICS = {
         'ga': {
-            'id': ''  # prod: UA-23534904-1
+            'id': 'UA-1234567-1'
         },
-        'google_conversion': {
-            'id': 997902847,
+        'adwords_conversion': {
+            'id': 1234567,
             'demo': {
                 'google_conversion_language': 'en',
                 'google_conversion_color': 'ffffff',
@@ -62,10 +62,10 @@ Installation
         },
 
         'metrika': {
-            'id': 24209977
+            'id': 1234567
         },
         'mixpanel': {
-            'id': '972adc8176ff3ebcaba9130196c784ba'  # prod: 6f911e9255b01052dfe29f53297f45e9
+            'id': '0cc175b9c0f1b6a831c399e269772661'
         }
     }
 

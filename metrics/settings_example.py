@@ -57,5 +57,5 @@ METRICS = {
     }
 }
 
-METRICS_EXCLUDE_USER_DOMAIN = 'exante.eu'
+METRICS_EXCLUDE_USER_DOMAIN = 'example.com'
 
