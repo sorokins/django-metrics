@@ -6,10 +6,14 @@ Application helps to track everything with Google Analytics, Google Adwords, Yan
 
 Installation
 ----
+1. Install package from github::
 
-1. Add 'metrics' to INSTALLED_APPS in settings.py
+    pip install -e git+https://github.com/sorokins/django-metrics.git#egg=django-metrics==0.1
 
-2. Add this counter settings to settings.py::
+
+2. Add 'metrics' to INSTALLED_APPS in settings.py
+
+3. Add this counter settings to settings.py::
 
     METRICS = {
         'ga': {
@@ -72,13 +76,13 @@ Installation
     METRICS_EXCLUDE_USER_DOMAIN = 'example.com'
 
 
-3. Insert js-script into page::
+4. Insert js-script into page::
 
     {% load metrics %}
     {% metrics_js %}
 
 
-4. Insert js-codes for counters::
+5. Insert js-codes for counters::
 
     {% load metrics %}
     {% metrika_counter %}
