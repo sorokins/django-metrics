@@ -9,7 +9,7 @@ Installation
 
 1. Add 'metrics' to INSTALLED_APPS in settings.py
 
-2. Add this counter settings to settings.py:
+2. Add this counter settings to settings.py::
 
     METRICS = {
         'ga': {
@@ -72,12 +72,14 @@ Installation
     METRICS_EXCLUDE_USER_DOMAIN = 'example.com'
 
 
-3. Insert js-script into page:
+3. Insert js-script into page::
 
     {% load metrics %}
     {% metrics_js %}
 
-4. Insert js-codes for counters:
+
+4. Insert js-codes for counters::
+
     {% load metrics %}
     {% metrika_counter %}
     {% mixpanel_counter %}
@@ -86,11 +88,39 @@ Installation
 
 How to use
 ------
-1. Track events in js (will be send to Mixpanel, GA, Yandex.Metrika):
+1. Track events in js (will be send to Mixpanel, GA, Yandex.Metrika)::
+
     Metrics.track_event(category, action, user, value, data)
 
-    For example:
+    // For example:
     Metrics.track_event('acquisition', 'Application finished', 'email@example.com', 50, {demo: true});
 
 
+2. Track adwords conversions in js::
 
+    Metrics.adwords_conversion(name)  // name of conversion from settings.py
+
+
+3. Track server-side events (GA and Mixpanel) with celery::
+
+    track_event.delay(event_category, event_action, distinct_id=None, event_label='', event_value='', properties={}, utm=None)
+
+, where utm is::
+
+    utm = {
+        "referrer": '...',
+        "source": '...',
+        "campaign": '...',
+        "medium": '...',
+        "gclid": '...',
+        "dclid": '...',
+    }
+
+4. Server-side utils for mixpanel::
+
+    mixpanel_alias.delay(new_id, old_id)
+    mixpanel_people_set.delay(distinct_id, event_name, value=None, increment=False)
+    mixpanel_track_charge.delay(distinct_id, amount)
+
+
+Also, package contains middleware.UTMMiddleware which saves utm_* data from request or cookies in session.
