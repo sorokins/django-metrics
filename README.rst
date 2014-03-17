@@ -13,7 +13,7 @@ Installation
 
 2. Add 'metrics' to INSTALLED_APPS in settings.py
 
-3. Add this counter settings to settings.py::
+3. Add counter settings to settings.py::
 
     METRICS = {
         'ga': {
