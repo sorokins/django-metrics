@@ -88,12 +88,12 @@ Installation
 
 How to use
 ------
-1. Track events in js (will be send to Mixpanel, GA, Yandex.Metrika)::
+1. Track event in Mixpanel, GA, Yandex.Metrika in client-side::
 
     Metrics.track_event(category, action, user, value, data)
 
     // For example:
-    Metrics.track_event('acquisition', 'Application finished', 'email@example.com', 50, {demo: true});
+    Metrics.track_event('acquisition', 'Application_finished', 'email@example.com', 50, {demo: true});
 
 
 2. Track adwords conversions in js::
