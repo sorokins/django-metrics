@@ -22,14 +22,22 @@ def mixpanel_alias(new_id, old_id):
 
 
 @task(name='metrics.mixpanel_track')
-def mixpanel_track(distinct_id, event_name, properties={}):
+def mixpanel_track(distinct_id, event_name, properties=None, utm=None):
     if not distinct_id:
         return
     if not settings.DEBUG and distinct_id.endswith(domain_exclude):
         return
 
+    # if utm:
+    #     properties.update({
+    #         "utm_referrer": utm.get("referrer"),
+    #         "utm_source": utm.get("source"),
+    #         "utm_campaign": utm.get("campaign"),
+    #         "utm_medium": utm.get("medium"),
+    #     })
+
     mp = Mixpanel(settings.METRICS['mixpanel']['id'])
-    mp.track(distinct_id, event_name, properties)
+    mp.track(distinct_id, event_name, properties or {})
 
 
 @task(name='metrics.mixpanel_people_set')
