@@ -8,7 +8,7 @@
             if (mixpanel.get_distinct_id !== undefined) {
                 distinct_id = mixpanel.get_distinct_id();
             }
-            {% if not DEBUG %}
+            {% if not DEBUG and METRICS_EXCLUDE_USER_DOMAIN %}
                 if (distinct_id && distinct_id.indexOf('@{{ METRICS_EXCLUDE_USER_DOMAIN }}') != -1) {
                     // do not track
                     return;
@@ -37,7 +37,7 @@
                 user = mixpanel.get_distinct_id();
             }
 
-            {% if not DEBUG %}
+            {% if not DEBUG and METRICS_EXCLUDE_USER_DOMAIN %}
                 if (user && user.indexOf('@{{ METRICS_EXCLUDE_USER_DOMAIN }}') != -1) {
                     // do not track
                     return;
