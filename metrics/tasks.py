@@ -108,6 +108,6 @@ def ga_track(event_category, event_action, distinct_id=None, event_label='', eve
 
 
 @task(name='metrics.track_event')
-def track_event(event_category, event_action, distinct_id=None, event_label='', event_value='', properties={}, utm=None):
+def track_event(event_category, event_action, distinct_id=None, event_label='', event_value='', properties=None, utm=None):
     ga_track.delay(event_category, event_action, distinct_id, event_label, event_value, utm=utm)
-    mixpanel_track.delay(distinct_id, event_action, properties)
+    mixpanel_track.delay(distinct_id, event_action, properties, utm=utm)
