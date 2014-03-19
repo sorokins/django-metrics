@@ -48,7 +48,7 @@
             if (typeof ga !== 'undefined') {
 
                 var label = user;
-                if (label.indexOf('@') != -1) { // email, not uid
+                if (label.indexOf('@') != -1) { // email, not mixpanel's uid
                     ga('send', 'event', category, action, label, value);
                 } else {
                     ga('send', 'event', category, action);
@@ -67,6 +67,10 @@
                 if (typeof data === 'undefined') {
                     data = {};
                 }
+                data = $.extend(data, {
+                    'distinct_id': user
+                });
+
                 mixpanel.track(action, data);
             }
         },
