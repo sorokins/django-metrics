@@ -85,7 +85,7 @@
 
             for (var key in conversions) {
                 if (key == name) {
-/*
+        {% comment %}
                     // We can not use script loading, beacause Google conversion tracking code
                     // use document.write() to write into DOM while page loading. After page loaded document.write()
                     // replaces all content.
@@ -98,7 +98,7 @@
                     oScript.type = "text/javascript";
                     oScript.src="//www.googleadservices.com/pagead/conversion.js";
                     oHead.appendChild( oScript);
-*/
+        {% endcomment %}
 
                     var label =  conversions[key]['google_conversion_label'];
                     if (label) {
