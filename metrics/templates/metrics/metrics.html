@@ -80,10 +80,16 @@
              * name - from METRICS['adwords_conversion'] variable
              */
             var conversions = {{ adwords_conversions|safe }};
+            // window.google_conversion_id = conversions.id;
             var google_conversion_id = conversions.id;
 
             for (var key in conversions) {
                 if (key == name) {
+/*
+                    // We can not use script loading, beacause Google conversion tracking code
+                    // use document.write() to write into DOM while page loading. After page loaded document.write()
+                    // replaces all content.
+
                     for (var var_name in conversions[key]) {
                         window[var_name] = conversions[key][var_name];
                     }
@@ -92,7 +98,15 @@
                     oScript.type = "text/javascript";
                     oScript.src="//www.googleadservices.com/pagead/conversion.js";
                     oHead.appendChild( oScript);
+*/
 
+                    var label =  conversions[key]['google_conversion_label'];
+                    if (label) {
+                        var image = new Image(1,1);
+                        image.src = '//www.googleadservices.com/pagead/conversion/' + google_conversion_id +
+                                '/?label=' + label + '&guid=ON&script=0'
+
+                    }
                     break;
                 }
             }
