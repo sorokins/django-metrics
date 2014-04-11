@@ -10,11 +10,13 @@ import requests
 logger = logging.getLogger(__name__)
 
 
-domain_exclude = u'@' + settings.METRICS_EXCLUDE_USER_DOMAIN
+domain_exclude = getattr(settings, 'METRICS_EXCLUDE_USER_DOMAIN', None)
+if domain_exclude:
+    domain_exclude = u'@' + domain_exclude
 
 @task(name='metrics.mixpanel_alias')
 def mixpanel_alias(new_id, old_id):
-    if not settings.DEBUG and new_id.endswith(domain_exclude):
+    if not settings.DEBUG and domain_exclude and new_id.endswith(domain_exclude):
         return
     else:
         mp = Mixpanel(settings.METRICS['mixpanel']['id'])
@@ -25,7 +27,7 @@ def mixpanel_alias(new_id, old_id):
 def mixpanel_track(distinct_id, event_name, properties=None, utm=None):
     if not distinct_id:
         return
-    if not settings.DEBUG and distinct_id.endswith(domain_exclude):
+    if not settings.DEBUG and domain_exclude and distinct_id.endswith(domain_exclude):
         return
 
     # if utm:
@@ -43,11 +45,11 @@ def mixpanel_track(distinct_id, event_name, properties=None, utm=None):
 @task(name='metrics.mixpanel_people_set')
 def mixpanel_people_set(distinct_id, event_name, value=None, increment=False):
     """
-    If value not set value = datetime
+    If value not set value = datetime`
     """
     if not distinct_id:
         return
-    if not settings.DEBUG and distinct_id.endswith(domain_exclude):
+    if not settings.DEBUG and domain_exclude and distinct_id.endswith(domain_exclude):
         return
 
     mp = Mixpanel(settings.METRICS['mixpanel']['id'])
@@ -61,7 +63,7 @@ def mixpanel_people_set(distinct_id, event_name, value=None, increment=False):
 
 @task(name='metrics.mixpanel_track_charge')
 def mixpanel_track_charge(distinct_id, amount):
-    if not settings.DEBUG and distinct_id.endswith(domain_exclude):
+    if not settings.DEBUG and domain_exclude and distinct_id.endswith(domain_exclude):
         return
 
     mp = Mixpanel(settings.METRICS['mixpanel']['id'])

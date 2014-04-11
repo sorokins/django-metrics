@@ -27,11 +27,16 @@
                 mixpanel.identify(distinct_id);
             }
         },
-        track_event: function(category, action, user, value, data) {
+        track_event: function(category, action, user, value, data, platforms) {
             /**
              * Track event in GA, Mixpanel, Y.Metrika
              * action should be ID without spaces (otherwise Metrika will not track it)
+             * platforms: ['metrika', 'mixpanel', 'ga']
              */
+
+            if (!platforms) {
+                platforms = ['metrika', 'mixpanel', 'ga']
+            }
 
             if (!user && mixpanel.get_distinct_id !== undefined) {
                 user = mixpanel.get_distinct_id();
@@ -45,7 +50,7 @@
             {% endif %}
 
 
-            if (typeof ga !== 'undefined') {
+            if (typeof ga !== 'undefined' && platforms.indexOf('ga') != -1) {
 
                 var label = user;
                 if (label.indexOf('@') != -1) { // email, not mixpanel's uid
@@ -56,13 +61,14 @@
 
             }
 
-            if (typeof yaCounter{{ metrika_id }} !== 'undefined') {
-                yaCounter{{ metrika_id }}.reachGoal(action, {
+            var yaCounter = window.yaCounter{{ metrika_id }};
+            if (typeof yaCounter !== 'undefined' && platforms.indexOf('metrika') != -1) {
+                yaCounter.reachGoal(action, {
                     value: value
                 })
             }
 
-            if (typeof mixpanel !== 'undefined') {
+            if (typeof mixpanel !== 'undefined' && platforms.indexOf('mixpanel') != -1) {
 
                 if (typeof data === 'undefined') {
                     data = {};
