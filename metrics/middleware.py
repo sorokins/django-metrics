@@ -3,27 +3,33 @@ class UTMMiddleware(object):
         utm = request.session.get("utm", {})
         if "utm_referer" in request.REQUEST or "utm_referer" in request.COOKIES or request.META.has_key('HTTP_REFERER'):
             referrer = request.REQUEST.get('utm_referer') or request.REQUEST.get('utm_referer') or request.META['HTTP_REFERER']
-            utm['referrer'] = referrer[:2048]
+            if utm['referrer']:
+                utm['referrer'] = referrer[:2048]
 
         if "utm_source" in request.REQUEST or "utm_source" in request.COOKIES:
             utm['source'] = request.REQUEST.get('utm_source') or request.COOKIES.get('utm_source')
-            utm['source'] = utm['source'][:100]
+            if utm['source']:
+                utm['source'] = utm['source'][:100]
             utm['referrer'] = None
 
         if "utm_medium" in request.REQUEST or "utm_medium" in request.COOKIES:
             utm['medium'] = request.REQUEST.get('utm_medium') or request.COOKIES.get('utm_medium')
-            utm['medium'] = utm['medium'][:50]
+            if utm['medium']:
+                utm['medium'] = utm['medium'][:50]
 
         if "utm_campaign" in request.REQUEST or "utm_campaign" in request.COOKIES:
             utm['campaign'] = request.REQUEST.get('utm_campaign') or request.COOKIES.get('utm_campaign')
-            utm['campaign'] = utm['campaign'][:100]
+            if utm['campaign']:
+                utm['campaign'] = utm['campaign'][:100]
 
         if "gclid" in request.REQUEST or "gclid" in request.COOKIES:
             utm['gclid'] = request.REQUEST.get('gclid') or request.COOKIES.get('utm_gclid')
-            utm['gclid'] = utm['gclid'][:100]
+            if utm['gclid']:
+                utm['gclid'] = utm['gclid'][:100]
 
         if "dclid" in request.REQUEST or "dclid" in request.COOKIES:
             utm['dclid'] = request.REQUEST.get('dclid') or request.COOKIES.get('utm_dclid')
-            utm['dclid'] = utm['dclid'][:100]
+            if utm['dclid']:
+                utm['dclid'] = utm['dclid'][:100]
 
         request.session['utm'] = utm
