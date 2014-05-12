@@ -3,7 +3,7 @@ class UTMMiddleware(object):
         utm = request.session.get("utm", {})
         if "utm_referer" in request.REQUEST or "utm_referer" in request.COOKIES or request.META.has_key('HTTP_REFERER'):
             referrer = request.REQUEST.get('utm_referer') or request.REQUEST.get('utm_referer') or request.META['HTTP_REFERER']
-            if utm['referrer']:
+            if referrer:
                 utm['referrer'] = referrer[:2048]
 
         if "utm_source" in request.REQUEST or "utm_source" in request.COOKIES:
