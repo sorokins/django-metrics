@@ -8,7 +8,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-metrics',
-    version='0.1.5',
+    version='0.1.6',
     packages=['metrics'],
     include_package_data=True,
     license='BSD License',  # example license
@@ -17,7 +17,11 @@ setup(
     url='',
     author='Sergey Sorokin, Denis Voskvitsov',
     author_email='40inss@gmail.com',
-    install_requires = ['mixpanel-py>=2.0.1,<=2.99', 'celery>=3.1.9,<=3.99'],
+    install_requires = [
+        'mixpanel-py>=2.0.1,<=2.99',
+        'celery>=3.1.9,<=3.99',
+        'requests>=2.0,<2.99'
+    ],
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',

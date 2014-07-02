@@ -8,7 +8,7 @@ Installation
 ----
 1. Install package from github::
 
-    pip install -e git+https://github.com/sorokins/django-metrics.git#egg=django-metrics==0.1.5
+    pip install -e git+https://github.com/sorokins/django-metrics.git#egg=django-metrics==0.1.6
 
 
 2. Add 'metrics' to INSTALLED_APPS in settings.py
