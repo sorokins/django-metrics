@@ -53,7 +53,7 @@
             if (typeof ga !== 'undefined' && platforms.indexOf('ga') != -1) {
 
                 var label = user;
-                if (label && label.indexOf('@') != -1) { // email, not mixpanel's uid
+                if (typeof label == 'string' && label.match(/[0-9\-a-f]{50,60}/i) === null) { // not mixpanel's uid
                     ga('send', 'event', category, action, label, value);
                 } else {
                     ga('send', 'event', category, action);
