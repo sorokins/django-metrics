@@ -1,9 +1,11 @@
-import logging
 import uuid
-from celery.task import task
+import logging
 from datetime import datetime
+
 from django.conf import settings
+from celery.task import task
 from mixpanel import Mixpanel
+from django.utils import six
 import requests
 
 
@@ -13,6 +15,20 @@ logger = logging.getLogger(__name__)
 domain_exclude = getattr(settings, 'METRICS_EXCLUDE_USER_DOMAIN', None)
 if domain_exclude:
     domain_exclude = u'@' + domain_exclude
+
+
+# https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
+GA_UTM_CONVERSION = {
+    'dr': 'referrer',
+    'cs': 'source',
+    'cn': 'campaign',
+    'cm': 'medium',
+    'gclid': 'gclid',
+    'dclid': 'dclid',
+    'uip': 'user_ip',
+    'ua': 'user_agent',
+}
+
 
 @task(name='metrics.mixpanel_alias')
 def mixpanel_alias(new_id, old_id):
@@ -24,7 +40,8 @@ def mixpanel_alias(new_id, old_id):
 
 
 @task(name='metrics.mixpanel_track')
-def mixpanel_track(distinct_id, event_name, properties=None, utm=None):
+def mixpanel_track(distinct_id, event_name, properties=None,
+                   utm=None, user_ip=None, user_agent=None):
     if not distinct_id:
         return
     if not settings.DEBUG and domain_exclude and distinct_id.endswith(domain_exclude):
@@ -73,28 +90,23 @@ def mixpanel_track_charge(distinct_id, amount):
 
 
 @task(name="ga.track_event")
-def ga_track(event_category, event_action, distinct_id=None, event_label='', event_value='', utm=None):
-    if not distinct_id:
-        distinct_id = uuid.uuid4()
-
+def ga_track(event_category, event_action, distinct_id=None,
+             event_label='', event_value='',
+             utm=None):
     data = {
         'v': 1,
         'tid': settings.METRICS['ga']['id'],
-        'cid': distinct_id,
+        'cid': distinct_id or uuid.uuid4(),
         't': 'event',
         'ec': event_category,
         'ea': event_action,
     }
-    if utm:
-        data.update({
-            "dr": utm.get("referrer"),
-            "cs": utm.get("source"),
-            "cn": utm.get("campaign"),
-            "cm": utm.get("medium"),
-            "gclid": utm.get("gclid"),
-            "dclid": utm.get("dclid"),
-        })
 
+    utm = utm or {}
+    for ga_key, utm_key in six.iteritems(GA_UTM_CONVERSION):
+        if utm_key not in utm:
+            continue
+        data[ga_key] = utm[utm_key]
 
     if event_label:
         data.update({
@@ -111,5 +123,7 @@ def ga_track(event_category, event_action, distinct_id=None, event_label='', eve
 
 @task(name='metrics.track_event')
 def track_event(event_category, event_action, distinct_id=None, event_label='', event_value='', properties=None, utm=None):
-    ga_track.delay(event_category, event_action, distinct_id, event_label, event_value, utm=utm)
-    mixpanel_track.delay(distinct_id, event_action, properties, utm=utm)
+    ga_track.delay(event_category, event_action, distinct_id, event_label, event_value,
+                   utm=utm)
+    mixpanel_track.delay(distinct_id, event_action, properties,
+                         utm=utm)
