@@ -1,10 +1,13 @@
 import os
+
 from setuptools import setup
+
 
 README = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 
 # allow setup.py to be run from any path
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
+
 
 setup(
     name='django-metrics',
@@ -20,7 +23,8 @@ setup(
     install_requires = [
         'mixpanel-py>=2.0.1,<=2.99',
         'celery>=3.1.9,<=3.99',
-        'requests>=2.0,<2.99'
+        'requests>=2.0,<2.99',
+        'django-ipware==1.1.1',
     ],
     classifiers=[
         'Environment :: Web Environment',
