@@ -1,6 +1,8 @@
 import json
+
 from django import template
 from django.conf import settings
+
 
 register = template.Library()
 
@@ -21,15 +23,16 @@ def metrika_counter():
         'id': settings.METRICS['metrika']['id']
     }
 
+
 @register.inclusion_tag('metrics/mixpanel_counter.html')
 def mixpanel_counter():
     return {
         'id': settings.METRICS['mixpanel']['id']
     }
 
+
 @register.inclusion_tag('metrics/ga_counter.html')
 def ga_counter():
     return {
         'id': settings.METRICS['ga']['id']
     }
-
