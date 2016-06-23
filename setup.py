@@ -2,6 +2,8 @@ import os
 
 from setuptools import setup
 
+from metrics import __version__
+
 
 README = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 
@@ -11,7 +13,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-metrics',
-    version='0.1.9',
+    version='.'.join(map(str, __version__)),
     packages=['metrics'],
     include_package_data=True,
     license='BSD License',  # example license

@@ -8,6 +8,8 @@ from mixpanel import Mixpanel
 from django.utils import six
 import requests
 
+from .const import USER_AGENT
+
 
 logger = logging.getLogger(__name__)
 
@@ -118,7 +120,8 @@ def ga_track(event_category, event_action, distinct_id=None,
         })
 
     logger.info(u'GA data: %s' % data)
-    requests.post('http://www.google-analytics.com/collect', data)
+    requests.post('http://www.google-analytics.com/collect', data,
+                  headers={'user-agent': USER_AGENT})
 
 
 @task(name='metrics.track_event')
