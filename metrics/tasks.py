@@ -36,9 +36,13 @@ GA_UTM_CONVERSION = {
 def mixpanel_alias(new_id, old_id):
     if not settings.DEBUG and domain_exclude and new_id.endswith(domain_exclude):
         return
-    else:
-        mp = Mixpanel(settings.METRICS['mixpanel']['id'])
-        mp.alias(new_id, old_id)
+
+    id = settings.METRICS.get('mixpanel', {}).get('id')
+    if not id:
+        logger.info('Mixpanel id not defined, task ignored')
+        return
+    mp = Mixpanel(id)
+    mp.alias(new_id, old_id)
 
 
 @task(name='metrics.mixpanel_track')
@@ -49,6 +53,11 @@ def mixpanel_track(distinct_id, event_name, properties=None,
     if not settings.DEBUG and domain_exclude and distinct_id.endswith(domain_exclude):
         return
 
+    id = settings.METRICS.get('mixpanel', {}).get('id')
+    if not id:
+        logger.info('Mixpanel id not defined, task ignored')
+        return
+
     # if utm:
     #     properties.update({
     #         "utm_referrer": utm.get("referrer"),
@@ -57,7 +66,7 @@ def mixpanel_track(distinct_id, event_name, properties=None,
     #         "utm_medium": utm.get("medium"),
     #     })
 
-    mp = Mixpanel(settings.METRICS['mixpanel']['id'])
+    mp = Mixpanel(id)
     mp.track(distinct_id, event_name, properties or {})
 
 
@@ -71,7 +80,12 @@ def mixpanel_people_set(distinct_id, event_name, value=None, increment=False):
     if not settings.DEBUG and domain_exclude and distinct_id.endswith(domain_exclude):
         return
 
-    mp = Mixpanel(settings.METRICS['mixpanel']['id'])
+    id = settings.METRICS.get('mixpanel', {}).get('id')
+    if not id:
+        logger.info('Mixpanel id not defined, task ignored')
+        return
+
+    mp = Mixpanel(id)
     if increment:
         mp.people_increment(distinct_id, {event_name: value})
     else:
@@ -84,8 +98,12 @@ def mixpanel_people_set(distinct_id, event_name, value=None, increment=False):
 def mixpanel_track_charge(distinct_id, amount):
     if not settings.DEBUG and domain_exclude and distinct_id.endswith(domain_exclude):
         return
+    id = settings.METRICS.get('mixpanel', {}).get('id')
+    if not id:
+        logger.info('Mixpanel id not defined, task ignored')
+        return
 
-    mp = Mixpanel(settings.METRICS['mixpanel']['id'])
+    mp = Mixpanel(id)
     mp.people_track_charge(distinct_id, amount, {
         '$time': datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
     })
@@ -95,9 +113,15 @@ def mixpanel_track_charge(distinct_id, amount):
 def ga_track(event_category, event_action, distinct_id=None,
              event_label='', event_value='',
              utm=None):
+
+    id = settings.METRICS.get('ga', {}).get('id')
+    if not id:
+        logger.info('GA id not defined, task ignored')
+        return
+
     data = {
         'v': 1,
-        'tid': settings.METRICS['ga']['id'],
+        'tid': id,
         'cid': distinct_id or uuid.uuid4(),
         't': 'event',
         'ec': event_category,

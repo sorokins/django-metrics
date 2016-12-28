@@ -4,6 +4,8 @@
             /**
              * name_or_object - name (string) or object {key: value} for bulk people set
              */
+            if (!window.mixpanel) return;
+
             var distinct_id;
             if (mixpanel.get_distinct_id !== undefined) {
                 distinct_id = mixpanel.get_distinct_id();

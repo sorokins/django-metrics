@@ -34,23 +34,23 @@ def _conv_set_params(request, set_params=None):
 def metrics_js():
     return {
         'DEBUG': settings.DEBUG,
-        'metrika_id': settings.METRICS['metrika']['id'],
+        'metrika_id': settings.METRICS.get('metrika', {}).get('id'),
         'METRICS_EXCLUDE_USER_DOMAIN': settings.METRICS_EXCLUDE_USER_DOMAIN,
-        'adwords_conversions': json.dumps(settings.METRICS['adwords_conversion']),
+        'adwords_conversions': json.dumps(settings.METRICS.get('adwords_conversion')),
     }
 
 
 @register.inclusion_tag('metrics/metrika_counter.html')
 def metrika_counter():
     return {
-        'id': settings.METRICS['metrika']['id'],
+        'id': settings.METRICS.get('metrika', {}).get('id')
     }
 
 
 @register.inclusion_tag('metrics/mixpanel_counter.html')
 def mixpanel_counter():
     return {
-        'id': settings.METRICS['mixpanel']['id'],
+        'id': settings.METRICS.get('mixpanel', {}).get('id')
     }
 
 
@@ -58,6 +58,6 @@ def mixpanel_counter():
 def ga_counter(context, ga_id=None, **set_params):
     request = context.get('request')
     return {
-        'id': ga_id or settings.METRICS['ga']['id'],
+        'id': settings.METRICS.get('ga', {}).get('id'),
         'set_params': _conv_set_params(request, set_params),
     }

@@ -2,3 +2,4 @@ include LICENSE
 include README.rst
 recursive-include metrics/templates *
 recursive-include metrics/templatetags *
+recursive-include metrics/deferred *
