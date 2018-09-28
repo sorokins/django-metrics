@@ -40,7 +40,7 @@
                 platforms = ['metrika', 'mixpanel', 'ga']
             }
 
-            if (!user && !!mixpanel && mixpanel.get_distinct_id !== undefined) {
+            if (!user && typeof mixpanel !== 'undefined' && mixpanel.get_distinct_id !== undefined) {
                 user = mixpanel.get_distinct_id();
             }
 
