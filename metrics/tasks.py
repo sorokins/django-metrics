@@ -47,7 +47,7 @@ def mixpanel_alias(new_id, old_id):
 
 @task(name='metrics.mixpanel_track')
 def mixpanel_track(distinct_id, event_name, properties=None,
-                   utm=None, user_ip=None, user_agent=None):
+                   utm=None, user_ip=None, user_agent=None, **kwargs):
     if not distinct_id:
         return
     if not settings.DEBUG and domain_exclude and distinct_id.endswith(domain_exclude):
@@ -112,7 +112,7 @@ def mixpanel_track_charge(distinct_id, amount):
 @task(name="ga.track_event")
 def ga_track(event_category, event_action, distinct_id=None,
              event_label='', event_value='',
-             utm=None):
+             utm=None, **kwargs):
 
     id = settings.METRICS.get('ga', {}).get('id')
     if not id:
@@ -127,6 +127,8 @@ def ga_track(event_category, event_action, distinct_id=None,
         'ec': event_category,
         'ea': event_action,
     }
+
+    data.update(kwargs)
 
     utm = utm or {}
     for ga_key, utm_key in six.iteritems(GA_UTM_CONVERSION):
