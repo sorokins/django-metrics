@@ -151,8 +151,14 @@ def ga_track(event_category, event_action, distinct_id=None,
 
 
 @task(name='metrics.track_event')
-def track_event(event_category, event_action, distinct_id=None, event_label='', event_value='', properties=None, utm=None):
-    ga_track.delay(event_category, event_action, distinct_id, event_label, event_value,
-                   utm=utm)
-    mixpanel_track.delay(distinct_id, event_action, properties,
+def track_event(event_category, event_action, distinct_id=None, event_label='', event_value='', properties=None,
+                utm=None, **kwargs):
+
+    if settings.METRICS.get('ga', {}).get('id'):
+        ga_track.delay(event_category, event_action, distinct_id, event_label, event_value,
+                   utm=utm, **kwargs)
+
+    if settings.METRICS.get('mixpanel', {}).get('id'):
+
+        mixpanel_track.delay(distinct_id, event_action, properties,
                          utm=utm)
