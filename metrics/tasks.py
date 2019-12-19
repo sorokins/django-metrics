@@ -5,7 +5,6 @@ from datetime import datetime
 from django.conf import settings
 from celery.task import task
 from mixpanel import Mixpanel
-from django.utils import six
 import requests
 
 from .const import USER_AGENT
@@ -131,7 +130,7 @@ def ga_track(event_category, event_action, distinct_id=None,
     data.update(kwargs)
 
     utm = utm or {}
-    for ga_key, utm_key in six.iteritems(GA_UTM_CONVERSION):
+    for ga_key, utm_key in GA_UTM_CONVERSION.items():
         if utm_key not in utm:
             continue
         data[ga_key] = utm[utm_key]
