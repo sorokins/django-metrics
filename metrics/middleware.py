@@ -7,8 +7,8 @@ except ImportError:
 class UTMMiddleware(object):
     def process_request(self, request):
         utm = request.session.get('utm', {})
-        
-        if 'utm_referer' in request.REQUEST or 'utm_referer' in request.COOKIES or request.META.has_key('HTTP_REFERER'):
+
+        if 'utm_referer' in request.REQUEST or 'utm_referer' in request.COOKIES or 'HTTP_REFERER' in request.META:
             referrer = request.REQUEST.get('utm_referer') or request.REQUEST.get('utm_referer') or request.META['HTTP_REFERER']
             if referrer:
                 utm['referrer'] = referrer[:2048]
