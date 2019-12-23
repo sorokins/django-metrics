@@ -23,7 +23,7 @@ setup(
     author='Sergey Sorokin, Denis Voskvitsov',
     author_email='40inss@gmail.com',
     install_requires = [
-        'mixpanel>=2.0.1,<=2.99',
+        'mixpanel==4.5.0',
         'celery>=3.1.9,<=3.99',
         'requests>=2.0,<2.99',
         'django-ipware==1.1.1',
